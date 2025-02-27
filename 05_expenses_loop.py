@@ -56,7 +56,26 @@ def get_expenses(exp_type):
 
         # check user enter at lease one variable expense
         if (exp_type == "variable" and item_name == "xxx") and len(items_list) == 0:
-            print("Oops - You have to have at least one product")
+            print("Oops - You need to have at least one product")
+            continue
+
+        elif item_name == "xxx":
+            break
+
+        items_list.append(item_name)
+
+    # return all items for now so we can check loop
+    return items_list
 
 
 # Main
+
+# print("Getting Variable Costs")
+# variable_expenses = get_expenses("variable")
+# num_variable = len(variable_expenses)
+# print(f"You entered {num_variable} items\n")
+
+print("Getting Fixed Costs")
+fixed_expenses = get_expenses("fixed")
+num_fixed = len(fixed_expenses)
+print(f"You entered {num_fixed} items")
