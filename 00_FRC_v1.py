@@ -66,8 +66,12 @@ def not_blank(question):
         print("You cannot leave this blank, Please enter a response\n")
 
 
-def num_check(question, datatype=int, exit_code="xxx"):
+def num_check(question, datatype=None, exit_code="xxx"):
     """ Function to make sure user inputs an integer / float that is above 0 """
+
+    # default the datatype to int
+    if datatype is None:
+        datatype = int
 
     # get correct error message for data type
     if datatype == int:
@@ -80,7 +84,7 @@ def num_check(question, datatype=int, exit_code="xxx"):
         # tests for exit code
         response = input(question).lower()
 
-        if response == exit_code or response == exit_code[0]:
+        if response == exit_code:
             return ""
 
         # try statement for checking that it is of the correct datatype
@@ -193,7 +197,11 @@ print()
 
 # get product details
 product_name = not_blank("Product name: ")
+
+# loop to get a number
 quantity_made = num_check("Quantity being made: ")
+while quantity_made == "":
+    quantity_made = num_check("You can't leave yet: ")
 
 # get variable expenses
 print("\nGetting Variable Costs")
@@ -228,4 +236,52 @@ total_expenses_string = f"Total Expenses: ${total_expenses:.2f}"
 today = date.today()
 
 # get day, month
+day = today.strftime("%d")
+month = today.strftime("%m")
+year = today.strftime("%y")
 
+# Headings / Strings
+main_heading_string = make_statement(f"Fund Raising Calculator "
+                                     f"({product_name}, {day}/{month}/{year})", "=")
+quantity_string = f"Quantity being made: {quantity_made}"
+variable_heading_string = make_statement("Variable Expenses", "-")
+variable_subtotal_string = f"Variable Expenses Subtotal: ${variable_subtotal:.2f}"
+
+# set up strings if we have fixed costs
+if has_fixed == "yes":
+    fixed_heading_string = make_statement("Fixed Expenses", "-")
+    fixed_subtotal_string = f"Fixed Expenses Subtotal: ${fixed_subtotal:.2f}"
+
+# set fixed cost strings to blank if we don't have fixed costs
+else:
+    fixed_heading_string = make_statement("You have no Fixed Expenses", "-")
+    fixed_subtotal_string = "Fixed Expenses Subtotal: $0.00"
+
+# list of string to be outputted / written to file
+to_write = [
+    main_heading_string,
+    quantity_string, "\n",
+    variable_heading_string,
+    variable_panda,
+    variable_subtotal_string, "\n",
+    fixed_heading_string,
+    fixed_panda_string,
+    fixed_subtotal_string,
+    total_expenses_string
+]
+
+# print area
+print()
+for i in to_write:
+    print(i)
+
+# create file to hold data (add .txt extension)
+file_name = f"{product_name}_{year}_{month}_{day}"
+write_to = f"{file_name}.txt"
+
+text_file = open(write_to, "w+")
+
+# write the items to file
+for item in to_write:
+    text_file.write(item)
+    text_file.write("\n")
